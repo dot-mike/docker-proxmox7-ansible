@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  pve:
+    image: dmike/docker-proxmox7-ansible:latest
+    container_name: pve
+    hostname: pve.lab.io
+    privileged: true
+    shm_size: "4gb"
+    ports:
+      - "8006"
+    cap_add:
+      - ALL
+    security_opt:
+      - seccomp:unconfined
+    volumes:
+      - /etc/selinux/:/etc/selinux/
+      #- ${PWD}/network/interfaces:/etc/network/interfaces
+
+networks:
+  pve:
+    name: pve
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "15.0.0.0/24"
+          ip_range: "15.0.0.0/24"
+          gateway: "15.0.0.1"
